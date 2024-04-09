@@ -1,7 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import AppShell from '@/components/AppShell.vue'
+import NewExpenseForm from '@/components/ExpenseFormNew.vue'
+</script>
 
 <template>
-  <h1>Hello World</h1>
+  <app-shell>
+    <new-expense-form></new-expense-form>
+  </app-shell>
 </template>
 
 <style scoped></style>

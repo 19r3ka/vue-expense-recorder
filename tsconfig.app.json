@@ -1,6 +1,6 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": ["env.d.ts", "./src/**/*", "./src/**/*.vue", "/src/components/**/*", "/plugins/**/*"],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
     "composite": true,
@@ -10,6 +10,6 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-  },
-  "files": ["plugins/vuetify.ts"]
+  }
+  // "files": ["plugins/vuetify.ts"]
 }
