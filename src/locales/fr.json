@@ -1,0 +1,26 @@
+{
+  "language": {
+    "en": "anglais",
+    "fr": "français",
+    "switch_lang": "basculer en {lang}"
+  },
+  "expenseForm": {
+    "description": "Description de l'article",
+    "category": "Catégorie de dépenses",
+    "datetime": "Date et heure d'achat",
+    "amount": "Montant total dépensé",
+    "location": "Lieu d'achat"
+  },
+  "categories": {
+    "clothing": "Vêtements",
+    "entertainment": "Divertissement",
+    "food": "Nourriture",
+    "giftDonation": "Cadeau / Don",
+    "healthPersonalCare": "Santé / Soins personnels",
+    "householdSupply": "Fournitures ménagères",
+    "housing": "Logement",
+    "personal": "Personnel",
+    "transportation": "Transport",
+    "utilities": "Utilitaires"
+  }
+}

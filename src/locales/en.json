@@ -1,0 +1,26 @@
+{
+  "language": {
+    "en": "english",
+    "fr": "french",
+    "switch_lang": "switch to {lang}"
+  },
+  "expenseForm": {
+    "description": "Item Description",
+    "category": "Expense Category",
+    "datetime": "Purchase Date & Time",
+    "amount": "Total Amount Spent",
+    "location": "Purchase Location"
+  },
+  "categories": {
+    "clothing": "Clothing",
+    "entertainment": "Entertainment",
+    "food": "Food",
+    "giftDonation": "Gift / Donation",
+    "healthPersonalCare": "Health / Personal Care",
+    "householdSupply": "Household supply",
+    "housing": "Housing",
+    "personal": "Personal",
+    "transportation": "Transportation",
+    "utilities": "Utilities"
+  }
+}

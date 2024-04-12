@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { useDate } from 'vuetify'
-
-import MyDatePicker from '@/components/MyDatePicker.vue'
 import { computed } from 'vue'
+import MyDatePicker from '@/components/MyDatePicker.vue'
+import { hours, minutes } from '@/data/time'
 
 const adapter = useDate()
-
-const hours = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'))
-const minutes = Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, '0'))
 
 const dateTime = defineModel<Date>({ required: true })
 
@@ -43,11 +40,9 @@ const setDate = (date: Date) => {
  */
 const setHour = (hour: string) => {
   const parsedHour = parseInt(hour, 10)
-  if (isNaN(parsedHour) || parsedHour < 0 || parsedHour > 23) {
-    console.warn('Invalid hour input:', hour)
-    return
+  if (!isNaN(parsedHour) && parsedHour >= 0 && parsedHour <= 23) {
+    updateTime(dateTime.value, parsedHour, +selectedMinute.value)
   }
-  updateTime(dateTime.value, parsedHour, +selectedMinute.value)
 }
 
 /**
@@ -56,11 +51,9 @@ const setHour = (hour: string) => {
  */
 const setMinute = (minute: string) => {
   const parsedMinute = parseInt(minute, 10)
-  if (isNaN(parsedMinute) || parsedMinute < 0 || parsedMinute > 59) {
-    console.warn('Invalid minute input:', minute)
-    return
+  if (!isNaN(parsedMinute) && parsedMinute >= 0 && parsedMinute <= 59) {
+    updateTime(dateTime.value, +selectedHour.value, parsedMinute)
   }
-  updateTime(dateTime.value, +selectedHour.value, parsedMinute)
 }
 </script>
 
