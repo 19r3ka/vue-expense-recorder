@@ -8,7 +8,10 @@
     "description": "Item Description",
     "category": "Expense Category",
     "datetime": "Purchase Date & Time",
+    "date": "Date",
+    "time": "Time",
     "amount": "Total Amount Spent",
+    "currency": "Money Currency",
     "location": "Purchase Location"
   },
   "categories": {

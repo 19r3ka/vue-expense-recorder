@@ -1,8 +1,11 @@
 import 'vuetify/styles'
+import '@mdi/font/css/materialdesignicons.css'
+
 import { createVuetify } from 'vuetify'
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
 import { fr, en } from 'vuetify/locale'
-import i18n, { useI18n, SUPPORTED_LOCALES } from './i18n'
 import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
+import i18n, { useI18n, SUPPORTED_LOCALES } from './i18n'
 
 // define message schema for Vue component
 type MessageSchema = typeof en
@@ -28,4 +31,14 @@ function addVuetifyMessages(locale: string, messages: Record<string, any>) {
 }
 
 export { addVuetifyMessages }
-export default () => createVuetify({ locale: { adapter: createVueI18nAdapter({ i18n, useI18n }) } })
+export default () =>
+  createVuetify({
+    locale: { adapter: createVueI18nAdapter({ i18n, useI18n }) },
+    icons: {
+      defaultSet: 'mdi',
+      aliases,
+      sets: {
+        mdi
+      }
+    }
+  })

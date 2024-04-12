@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useDate } from 'vuetify'
+import { useI18n } from '@/plugins/i18n'
 import { computed } from 'vue'
 import MyDatePicker from '@/components/MyDatePicker.vue'
-import { hours, minutes } from '@/data/time'
+// import { hours, minutes } from '@/data/time'
 
 const adapter = useDate()
+const { t } = useI18n()
 
 const dateTime = defineModel<Date>({ required: true })
 
@@ -12,6 +14,19 @@ const selectedHour = computed(() => adapter.getHours(dateTime.value).toString().
 const selectedMinute = computed(() =>
   adapter.getMinutes(dateTime.value).toString().padStart(2, '0')
 )
+const selectedTime = computed(() => `${selectedHour.value}:${selectedMinute.value}`)
+
+/**
+ * Checks if provided parameter could be a valid hour representation
+ * @param hour
+ */
+const isValidHour = (hour: number) => !isNaN(hour) && hour >= 0 && hour <= 23
+
+/**
+ * Checks if provided parameter could be a valid minute representation
+ * @param minute
+ */
+const isValidMinute = (minute: number) => !isNaN(minute) && minute >= 0 && minute <= 59
 
 /**
  * Updates the time part of the dateTime model with the given hour and minute.
@@ -19,41 +34,30 @@ const selectedMinute = computed(() =>
  * @param hour The hour value (0-23).
  * @param minute The minute value (0-59).
  */
-const updateTime = (date: Date, hour: number, minute: number) => {
+const updateDateTime = (date: Date, time: string) => {
   const newDate = new Date(date.getTime()) // Create copy to avoid mutation
-  newDate.setHours(hour)
-  newDate.setMinutes(minute)
+  const [hours, minutes] = time.split(':').map(Number)
+
+  // TODO: Notify the user whenever the inputs (hours and minutes) are invalid
+  if (isValidHour(hours) && isValidMinute(minutes)) newDate.setHours(hours, minutes)
+
   dateTime.value = newDate
 }
 
 /**
- * Sets the date and time in the dateTime model.
+ * Sets the date to update the dateTime model.
  * @param date The new Date object to set.
  */
 const setDate = (date: Date) => {
-  updateTime(date, +selectedHour.value, +selectedMinute.value)
+  updateDateTime(date, selectedTime.value)
 }
 
 /**
- * Sets the hour in the dateTime model.
- * @param hour The hour value (string representation).
+ * Sets the time to update the dateTime model.
+ * @param date The new Date object to set.
  */
-const setHour = (hour: string) => {
-  const parsedHour = parseInt(hour, 10)
-  if (!isNaN(parsedHour) && parsedHour >= 0 && parsedHour <= 23) {
-    updateTime(dateTime.value, parsedHour, +selectedMinute.value)
-  }
-}
-
-/**
- * Sets the minute in the dateTime model.
- * @param minute The minute value (string representation).
- */
-const setMinute = (minute: string) => {
-  const parsedMinute = parseInt(minute, 10)
-  if (!isNaN(parsedMinute) && parsedMinute >= 0 && parsedMinute <= 59) {
-    updateTime(dateTime.value, +selectedHour.value, parsedMinute)
-  }
+const setTime = (time: string) => {
+  updateDateTime(dateTime.value, time)
 }
 </script>
 
@@ -61,26 +65,18 @@ const setMinute = (minute: string) => {
   <v-row>
     <v-col>
       <my-date-picker
-        label="Date"
+        :label="t('expenseForm.date')"
         :model-value="dateTime"
         @update:model-value="setDate"
       ></my-date-picker>
     </v-col>
     <v-col>
-      <v-combobox
-        label="Hour"
-        :model-value="selectedHour"
-        @update:model-value="setHour"
-        :items="hours"
-      ></v-combobox>
-    </v-col>
-    <v-col>
-      <v-combobox
-        label="Minute"
-        :model-value="selectedMinute"
-        @update:model-value="setMinute"
-        :items="minutes"
-      ></v-combobox>
+      <v-text-field
+        :label="t('expenseForm.time')"
+        type="time"
+        :model-value="selectedTime"
+        @update:model-value="setTime"
+      ></v-text-field>
     </v-col>
   </v-row>
 </template>

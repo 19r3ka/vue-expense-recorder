@@ -8,7 +8,10 @@
     "description": "Description de l'article",
     "category": "Catégorie de dépenses",
     "datetime": "Date et heure d'achat",
+    "date": "Date",
+    "time": "Heure",
     "amount": "Montant total dépensé",
+    "currency": "Devise de monnaie",
     "location": "Lieu d'achat"
   },
   "categories": {
