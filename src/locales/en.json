@@ -14,6 +14,9 @@
     "currency": "Money Currency",
     "location": "Purchase Location"
   },
+  "geolocation": {
+    "searchPosition": "Search By Address"
+  },
   "categories": {
     "clothing": "Clothing",
     "entertainment": "Entertainment",

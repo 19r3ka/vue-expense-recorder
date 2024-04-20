@@ -14,6 +14,9 @@
     "currency": "Devise de monnaie",
     "location": "Lieu d'achat"
   },
+  "geolocation": {
+    "searchPosition": "Rechercher par adresse"
+  },
   "categories": {
     "clothing": "Vêtements",
     "entertainment": "Divertissement",
