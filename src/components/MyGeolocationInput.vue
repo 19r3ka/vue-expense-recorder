@@ -33,7 +33,7 @@ function updatePosition(newPosition: GeoPoint) {
 <template>
   <v-card class="expense-location my-5">
     <v-card-item>
-      <v-card-title>{{ t('expenseForm.location') }}</v-card-title>
+      <v-card-subtitle>{{ t('expenseForm.location') }}</v-card-subtitle>
     </v-card-item>
 
     <v-card-text>

@@ -1,50 +1,64 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { ObjectEvent } from 'ol/Object'
+import { Map } from 'vue3-openlayers'
 import { formatGeopoint } from '@/utils/geopointUtils'
 import { OL_MAX_ZOOM } from '@/config/geocoding'
 
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
 
-const center = computed(() => formatGeopoint(props.modelValue, 'array'))
+const center = computed(() => formatGeopoint(props.modelValue, 'xy'))
+let flag = 0
 
 const rotation = ref(0)
 const zoom = ref(18)
 const projection = ref('EPSG:4326')
+const viewRef = ref<InstanceType<typeof Map.OlView> | null>(null)
 
-// const view = ref(null)
+const sameCoordinates = (a: number[], b: number[]): boolean => a.join() === b.join()
 
-function centerChanged(e: ObjectEvent) {
-  const newCenter = e.target.getCenter()
-  const sameCoordinates = (a: number[], b: number[]): boolean => a.join() === b.join()
+function centerChanged() {
+  // const [long, lat] = e.target.getCenter() as number[]
+  const [long, lat] = viewRef.value?.getCenter() as number[]
+  const newCenter = [lat, long]
 
-  if (sameCoordinates(center.value as number[], newCenter)) return
+  console.log(`Call n°${++flag}: center is ${newCenter}`)
 
+  const isSameCoordinates = sameCoordinates(center.value as number[], newCenter)
+  if (isSameCoordinates) return
+
+  // Swap [long, lat] which is the vue-openlayers coordinate to [lat, long]
   const formattedGeopoint = formatGeopoint(newCenter, 'object')
   emit('update:modelValue', formattedGeopoint)
 }
 
 function zoomChanged(e: ObjectEvent) {
-  zoom.value = Math.ceil(e.target.getZoom())
+  // to make sure the center does not change during zoom update
+  // save the value to restore it after zoom update
+  const center = e.target.getCenter()
+  const newZoom = e.target.getZoom()
+  zoom.value = zoom.value > newZoom ? Math.floor(newZoom) : Math.ceil(newZoom)
+  e.target.setCenter(center)
 }
 </script>
 
 <template>
+  <pre>{{ center }}</pre>
   <ol-map
     ref="map"
     :loadTilesWhileAnimating="true"
     :loadTilesWhileInteracting="true"
+    @moveend="centerChanged"
     style="height: 300px"
   >
     <ol-view
-      ref="view"
+      ref="viewRef"
       :center="center"
       :rotation="rotation"
       :zoom="zoom"
       :maxZoom="OL_MAX_ZOOM"
       :projection="projection"
-      @change:center="centerChanged"
       @change:resolution="zoomChanged"
     />
 

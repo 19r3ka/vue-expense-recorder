@@ -9,12 +9,12 @@ interface InputObject {
 }
 
 function parseString(geopoint: string): GeoPoint {
-  const [longitude, latitude] = geopoint.split(',').map(Number)
+  const [latitude, longitude] = geopoint.split(',').map(Number)
   return { latitude, longitude }
 }
 
 function parseArray(geopoint: number[]): GeoPoint {
-  const [longitude, latitude] = geopoint
+  const [latitude, longitude] = geopoint
   return { latitude, longitude }
 }
 
@@ -30,11 +30,17 @@ function parseObject(obj: InputObject): GeoPoint {
 }
 
 function formatToString(geopoint: GeoPoint): string {
-  return `${geopoint.longitude},${geopoint.latitude}`
+  return `${geopoint.latitude},${geopoint.longitude}`
+}
+
+// where X is longitude and Y is latitude
+// format used by vue-openlayers
+function formatToXY(geopoint: GeoPoint): number[] {
+  return [geopoint.longitude, geopoint.latitude]
 }
 
 function formatToArray(geopoint: GeoPoint): number[] {
-  return [geopoint.longitude, geopoint.latitude]
+  return [geopoint.latitude, geopoint.longitude]
 }
 
 function formatToObject(geopoint: GeoPoint): GeoPoint {
@@ -43,7 +49,7 @@ function formatToObject(geopoint: GeoPoint): GeoPoint {
 
 function formatGeopoint(
   geopoint: string | number[] | GeoPoint,
-  outputFormat: 'string' | 'array' | 'object'
+  outputFormat: 'string' | 'array' | 'object' | 'xy'
 ): GeoPoint | string | number[] {
   let parsedGeopoint: GeoPoint
 
@@ -62,6 +68,8 @@ function formatGeopoint(
       return formatToString(parsedGeopoint)
     case 'array':
       return formatToArray(parsedGeopoint)
+    case 'xy':
+      return formatToXY(parsedGeopoint)
     case 'object':
       return formatToObject(parsedGeopoint)
     default:
