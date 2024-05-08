@@ -5,6 +5,13 @@ import { computed } from 'vue'
 import MyDatePicker from '@/components/MyDatePicker.vue'
 // import { hours, minutes } from '@/data/time'
 
+const props = defineProps({
+  errorMessages: {
+    type: Array,
+    default: () => []
+  }
+})
+
 const adapter = useDate()
 const { t } = useI18n()
 
@@ -62,21 +69,24 @@ const setTime = (time: string) => {
 </script>
 
 <template>
-  <v-row>
-    <v-col>
-      <my-date-picker
-        :label="t('expenseForm.date')"
-        :model-value="dateTime"
-        @update:model-value="setDate"
-      ></my-date-picker>
-    </v-col>
-    <v-col>
-      <v-text-field
-        :label="t('expenseForm.time')"
-        type="time"
-        :model-value="selectedTime"
-        @update:model-value="setTime"
-      ></v-text-field>
-    </v-col>
-  </v-row>
+  <div>
+    <v-row>
+      <v-col>
+        <my-date-picker
+          :label="t('expenseForm.date')"
+          :model-value="dateTime"
+          :error-messages="props.errorMessages"
+          @update:model-value="setDate"
+        ></my-date-picker>
+      </v-col>
+      <v-col>
+        <v-text-field
+          :label="t('expenseForm.time')"
+          type="time"
+          :model-value="selectedTime"
+          @update:model-value="setTime"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+  </div>
 </template>

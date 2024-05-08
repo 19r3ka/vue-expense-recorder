@@ -7,6 +7,7 @@ import { useGeocoding, type NominatimResponseItem } from '@/composables/useGeoco
 import { type GeoPoint } from '@/components/MyGeolocationInput.vue'
 import { VAutocomplete } from 'vuetify/components'
 import { formatGeopoint } from '@/utils/geopointUtils'
+import { inject } from 'vue'
 
 export interface AutocompleteItem {
   title: string // The displayed text for the option
@@ -20,7 +21,9 @@ defineOptions({ inheritAttrs: false })
 const emit = defineEmits<{
   addressFound: [position: GeoPoint]
 }>()
+
 const { t } = useI18n()
+const v$ = inject('v$') as any
 
 const { isLoading, searchNominatim, searchResults } = useGeocoding()
 const { isSupported, coords, error } = useGeolocation()
@@ -107,5 +110,7 @@ function getDevicePosition() {
     no-filter
     :append-icon="locateMeIcon"
     @click:append="getDevicePosition"
+    @blur="v$.location.$touch"
+    @input="v$.location.$touch"
   ></v-autocomplete>
 </template>

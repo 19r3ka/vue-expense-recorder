@@ -23,8 +23,6 @@ function centerChanged() {
   const [long, lat] = viewRef.value?.getCenter() as number[]
   const newCenter = [lat, long]
 
-  console.log(`Call n°${++flag}: center is ${newCenter}`)
-
   const isSameCoordinates = sameCoordinates(center.value as number[], newCenter)
   if (isSameCoordinates) return
 
@@ -44,11 +42,10 @@ function zoomChanged(e: ObjectEvent) {
 </script>
 
 <template>
-  <pre>{{ center }}</pre>
   <ol-map
     ref="map"
-    :loadTilesWhileAnimating="true"
-    :loadTilesWhileInteracting="true"
+    :load-tiles-while-animating="true"
+    :load-tiles-while-interacting="true"
     @moveend="centerChanged"
     style="height: 300px"
   >
@@ -57,7 +54,7 @@ function zoomChanged(e: ObjectEvent) {
       :center="center"
       :rotation="rotation"
       :zoom="zoom"
-      :maxZoom="OL_MAX_ZOOM"
+      :max-zoom="OL_MAX_ZOOM"
       :projection="projection"
       @change:resolution="zoomChanged"
     />
@@ -66,7 +63,7 @@ function zoomChanged(e: ObjectEvent) {
       <ol-source-osm />
     </ol-tile-layer>
 
-    <ol-vector-layer :zIndex="2">
+    <ol-vector-layer :z-index="2">
       <ol-source-vector>
         <ol-feature>
           <ol-geom-point :coordinates="center"></ol-geom-point>

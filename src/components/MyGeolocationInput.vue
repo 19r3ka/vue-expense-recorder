@@ -18,20 +18,33 @@ export interface GeoPoint {
 
 const expensePosition = defineModel<GeoPoint>({ required: true })
 
+const props = defineProps({
+  errorMessages: {
+    type: Array,
+    default: () => []
+  }
+})
+
+const emit = defineEmits<{
+  locationChanged: [position: GeoPoint]
+}>()
+
 const { t } = useI18n()
 
 const showMap = computed(
-  () => expensePosition.value.latitude !== Infinity && expensePosition.value.longitude !== Infinity
+  () =>
+    expensePosition.value.latitude !== -Infinity && expensePosition.value.longitude !== -Infinity
 )
 
 function updatePosition(newPosition: GeoPoint) {
   expensePosition.value.latitude = newPosition.latitude
   expensePosition.value.longitude = newPosition.longitude
+  emit('locationChanged', expensePosition.value)
 }
 </script>
 
 <template>
-  <v-card class="expense-location my-5">
+  <v-card class="expense-location my-5" :class="{ 'text-red-darken-4': !!errorMessages.length }">
     <v-card-item>
       <v-card-subtitle>{{ t('expenseForm.location') }}</v-card-subtitle>
     </v-card-item>
@@ -47,6 +60,12 @@ function updatePosition(newPosition: GeoPoint) {
         id="expense-location-input"
         @address-found="updatePosition"
       ></my-geocoder-input>
+
+      <div transition="slide-y-transition" v-if="!!props.errorMessages.length">
+        <p class="text-caption" v-for="(error, index) in props.errorMessages" :key="index">
+          {{ error }}
+        </p>
+      </div>
     </v-card-text>
   </v-card>
 </template>

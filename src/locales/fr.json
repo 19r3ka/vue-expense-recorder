@@ -5,6 +5,8 @@
     "switch_lang": "basculer en {lang}"
   },
   "expenseForm": {
+    "title": "Ajouter une Dépense",
+    "instructions": "Veuillez remplir le formulaire ci-dessous pour suivre vos dépenses. Les champs marqués d'un * sont obligatoires.",
     "description": "Description de l'article",
     "category": "Catégorie de dépenses",
     "datetime": "Date et heure d'achat",
@@ -12,7 +14,19 @@
     "time": "Heure",
     "amount": "Montant total dépensé",
     "currency": "Devise de monnaie",
-    "location": "Lieu d'achat"
+    "location": "Lieu d'achat",
+    "save": "Enregistrer",
+    "validations": {
+      "alpha": "Veuillez entrer uniquement des lettres. Pas de chiffres ni de caractères spéciaux.",
+      "between": "La valeur du champ '{property}' doit être entre {min} et {max}.",
+      "required": "Veuillez remplir le champ '{property}'. Il est obligatoire.",
+      "maxLength": "La saisie ne doit pas dépasser {max} caractères.",
+      "notInFuture": "La date doit être aujourd'hui ou dans le passé. Les dates futures ne sont pas autorisées.",
+      "minValue": "La valeur du champ '{property}' est trop basse. Elle doit être au moins de {min}.",
+      "maxValue": "La valeur du champ '{property}' est trop élevée. Elle ne doit pas dépasser {max}.",
+      "numeric": "Veuillez entrer un nombre valide. Les autres caractères ne sont pas autorisés.",
+      "isLength": "La saisie doit être exactement de {length} caractères."
+    }
   },
   "geolocation": {
     "searchPosition": "Rechercher par adresse"

@@ -5,6 +5,8 @@
     "switch_lang": "switch to {lang}"
   },
   "expenseForm": {
+    "title": "Add an Expense",
+    "instructions": "Please fill out the form below to track your expense. Fields marked with * are required.",
     "description": "Item Description",
     "category": "Expense Category",
     "datetime": "Purchase Date & Time",
@@ -12,7 +14,19 @@
     "time": "Time",
     "amount": "Total Amount Spent",
     "currency": "Money Currency",
-    "location": "Purchase Location"
+    "location": "Purchase Location",
+    "save": "Save",
+    "validations": {
+      "alpha": "Please enter only letters. No Numbers and special characters.",
+      "between": "The {property} value must be between {min} and {max}.",
+      "required": "Please fill out the '{property}' field. It is required.",
+      "maxLength": "The input must not be longer than {max} characters.",
+      "notInFuture": "Date must be today or in the past. Future dates are not allowed.",
+      "minValue": "The {property} value is too low. It must be at least {min}.",
+      "maxValue": "The {property} value is too high. It must be no more than {max}.",
+      "numeric": "Please enter a valid number. Other characters are not allowed.",
+      "isLength": "The input must be exactly {length} characters long."
+    }
   },
   "geolocation": {
     "searchPosition": "Search By Address"
