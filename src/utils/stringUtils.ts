@@ -8,4 +8,9 @@ function toCamelCase(str: string): string {
   return str.replace(/^[A-Z]/, (match) => match.toLowerCase())
 }
 
-export { toCamelCase, toSnakeCase }
+// Capitalizes a string
+function capitalize(word: string) {
+  return word.charAt(0).toUpperCase() + word.slice(1)
+}
+
+export { toCamelCase, toSnakeCase, capitalize }

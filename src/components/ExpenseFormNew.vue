@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, provide } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useExpenseValidation } from '@/composables/useVuelidate'
+import { useExpensesStore } from '@/composables/useExpensesStore'
 
 import { Category } from '@/data/categories'
 import { currencyCodes, defaultCurrencyCode } from '@/data/currencies'
@@ -9,18 +10,23 @@ import { toCamelCase } from '@/utils/stringUtils'
 
 import MyDateTimeInput from '@/components/MyDateTimeInput.vue'
 import MyGeolocationInput, { type GeoPoint } from '@/components/MyGeolocationInput.vue'
-import { provide } from 'vue'
 
 export interface Expense {
+  _id?: string
+  _rev?: string
+  userId?: string
   description: string
   category: string
   datetime: Date
   location: GeoPoint
   amount: number
   currency: string
+  _createdAt?: Date
+  _editedAt?: Date
 }
 
 const { t } = useI18n()
+const { createExpense } = useExpensesStore()
 
 const initialExpense: Expense = reactive({
   description: '',
@@ -52,8 +58,15 @@ const isValid = computed(() => {
 })
 
 async function saveChanges() {
-  const formValid = await v$.value.$validate()
-  console.log('saving expense, form is valid?', formValid)
+  await createExpense(expense)
+  // const formValid = await v$.value.$validate()
+  // if (!formValid) return
+  // try {
+  //   const savedDoc = await createExpense(expense)
+  //   console.log('Expense successfully saved: ', savedDoc)
+  // } catch (error) {
+  //   console.log('something went terribly wrong', error)
+  // }
 }
 </script>
 
