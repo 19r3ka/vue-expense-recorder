@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, reactive } from 'vue'
 
-import ExpenseListItem from '@/components/ExpenseListItem.vue'
+import ExpenseListItem from '@/components/ExpensesListItem.vue'
 
 import { useExpensesStore } from '@/composables/useExpensesStore'
 import { useDateTime, SortDirection } from '@/composables/useDateTimeFunctions'
@@ -9,7 +9,7 @@ import type { Expense } from './ExpenseFormNew.vue'
 
 const { readExpenses } = useExpensesStore()
 const { formatDate, groupItemsByDate, sortItemsByTime } = useDateTime()
-const expenses: Expense[] = await readExpenses()
+const expenses: Expense[] = reactive(await readExpenses())
 
 const sortDirection = ref(SortDirection.ASC)
 

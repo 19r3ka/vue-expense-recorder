@@ -27,6 +27,8 @@ export interface Expense {
   _editedAt?: Date
 }
 
+const emit = defineEmits(['expense-saved'])
+
 const { t } = useI18n()
 const { createExpense } = useExpensesStore()
 
@@ -66,6 +68,7 @@ async function saveChanges() {
     const savedDoc = await createExpense(expense)
     console.log('Expense successfully saved: ', savedDoc)
     v$.value.$reset
+    emit('expense-saved', savedDoc)
   } catch (error) {
     console.log('something went terribly wrong', error)
   }

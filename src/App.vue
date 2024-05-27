@@ -12,7 +12,27 @@ import ExpensesList from '@/components/ExpensesList.vue'
       </template>
       <expenses-list></expenses-list>
     </Suspense>
-    <new-expense-form></new-expense-form>
+
+    <v-dialog max-width="500">
+      <template #activator="{ props: activatorProps }">
+        <v-fab
+          icon="mdi-plus"
+          class="mx-6"
+          location="bottom"
+          size="small"
+          color="primary"
+          v-bind="activatorProps"
+          absolute
+          offset
+        ></v-fab>
+      </template>
+
+      <template #default="{ isActive }">
+        <v-card>
+          <new-expense-form @expense-saved="isActive.value = false"></new-expense-form>
+        </v-card>
+      </template>
+    </v-dialog>
   </app-shell>
 </template>
 
