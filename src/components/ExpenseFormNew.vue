@@ -11,6 +11,8 @@ import { toCamelCase } from '@/utils/stringUtils'
 import MyDateTimeInput from '@/components/MyDateTimeInput.vue'
 import MyGeolocationInput, { type GeoPoint } from '@/components/MyGeolocationInput.vue'
 
+// TODO: Implement new expense caching so the information remains in the form until submission
+
 export interface Expense {
   _id?: string
   _rev?: string
@@ -58,20 +60,20 @@ const isValid = computed(() => {
 })
 
 async function saveChanges() {
-  await createExpense(expense)
-  // const formValid = await v$.value.$validate()
-  // if (!formValid) return
-  // try {
-  //   const savedDoc = await createExpense(expense)
-  //   console.log('Expense successfully saved: ', savedDoc)
-  // } catch (error) {
-  //   console.log('something went terribly wrong', error)
-  // }
+  const formValid = await v$.value.$validate()
+  if (!formValid) return
+  try {
+    const savedDoc = await createExpense(expense)
+    console.log('Expense successfully saved: ', savedDoc)
+    v$.value.$reset
+  } catch (error) {
+    console.log('something went terribly wrong', error)
+  }
 }
 </script>
 
 <template>
-  <v-container class="w-50 justify-center">
+  <v-container class="justify-center">
     <v-form @submit.prevent="saveChanges">
       <v-card class="mb-3" variant="tonal" :title="t('expenseForm.title')">
         <v-card-text>
@@ -98,7 +100,7 @@ async function saveChanges() {
           <v-text-field
             :label="amountLabel"
             type="number"
-            v-model="v$.amount.$model"
+            v-model.number="v$.amount.$model"
             :error-messages="v$.amount.$errors.map((e) => e.$message) as string[]"
             :suffix="expense.currency"
             append-icon="mdi-pencil"

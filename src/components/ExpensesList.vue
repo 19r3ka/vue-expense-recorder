@@ -1,0 +1,48 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+
+import ExpenseListItem from '@/components/ExpenseListItem.vue'
+
+import { useExpensesStore } from '@/composables/useExpensesStore'
+import { useDateTime, SortDirection } from '@/composables/useDateTimeFunctions'
+import type { Expense } from './ExpenseFormNew.vue'
+
+const { readExpenses } = useExpensesStore()
+const { formatDate, groupItemsByDate, sortItemsByTime } = useDateTime()
+const expenses: Expense[] = await readExpenses()
+
+const sortDirection = ref(SortDirection.ASC)
+
+// Computed property for grouped and sorted expenses
+const groupedExpenses = computed(() => {
+  const groups = groupItemsByDate(expenses)
+  return Object.entries(groups).map(([date, items]) => ({
+    date,
+    items: sortItemsByTime(items, sortDirection.value as SortDirection)
+  }))
+})
+</script>
+
+<template>
+  <v-container>
+    <v-virtual-scroll :items="groupedExpenses">
+      <template #default="{ item }">
+        <v-container fluid>
+          <v-row>
+            <v-col>
+              <h5 class="text-grey-darken-1 mb-1 text-capitalize">
+                {{ formatDate(new Date(item.date)) }}
+              </h5>
+              <v-divider></v-divider>
+              <expense-list-item
+                v-for="expense in item.items"
+                :key="expense._id"
+                v-bind="expense"
+              ></expense-list-item>
+            </v-col>
+          </v-row>
+        </v-container>
+      </template>
+    </v-virtual-scroll>
+  </v-container>
+</template>

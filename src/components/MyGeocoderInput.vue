@@ -75,6 +75,7 @@ function handleDebouncedSearch(): void {
  * Updates the component's internal state with a new position based on a provided location string.
  */
 function updatePosition(locationString: string): void {
+  if (!locationString) return
   const geopoint = formatGeopoint(locationString, 'object') as GeoPoint
   emit('addressFound', geopoint)
 }
