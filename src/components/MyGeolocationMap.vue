@@ -4,12 +4,17 @@ import { ObjectEvent } from 'ol/Object'
 import { Map } from 'vue3-openlayers'
 import { formatGeopoint } from '@/utils/geopointUtils'
 import { OL_MAX_ZOOM } from '@/config/geocoding'
+import type { GeoPoint } from './MyGeolocationInput.vue'
 
-const props = defineProps(['modelValue'])
+const props = defineProps({
+  modelValue: {
+    type: Object as () => GeoPoint,
+    required: true
+  }
+})
 const emit = defineEmits(['update:modelValue'])
 
 const center = computed(() => formatGeopoint(props.modelValue, 'xy'))
-let flag = 0
 
 const rotation = ref(0)
 const zoom = ref(18)

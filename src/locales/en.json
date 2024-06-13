@@ -28,6 +28,9 @@
       "isLength": "The input must be exactly {length} characters long."
     }
   },
+  "expense": {
+    "successfullySaved": "Hooray! Your expense found its new home in our database."
+  },
   "geolocation": {
     "searchPosition": "Search By Address"
   },
@@ -42,5 +45,31 @@
     "personal": "Personal",
     "transportation": "Transportation",
     "utilities": "Utilities"
+  },
+  "errors": {
+    "geolocation": {
+      "notSupported": "Oh no! Your device doesn't support geolocation. Maybe it's time for an upgrade?",
+      "permissionDenied": "Looks like we don't have permission to see where you've been blowing the cash. Mind enabling it?",
+      "positionUnavailable": "Hmm, we can't seem to find your location. Are you hiding in a secret lair?",
+      "timeout": "We're still trying to find you... but it's taking longer than expected. Check your connection?",
+      "invalidCoords": "The coordinates provided are invalid. Click on 'crosshair' button below to update them.",
+      "unknownError": "Something mysterious happened and we couldn't get your location. Try again?",
+      "defaultMessage": "Whoops! We're location clueless."
+    },
+    "geocoding": {
+      "apiRequestFailed": "Yikes! Our map seems to be on a break. Could you try again later?",
+      "emptyQuery": "Oops! It looks like you forgot to tell us where you want to go."
+    },
+    "indexedDB": {
+      "browserNotSupported": "Oh dear! Your browser doesn't support IndexedDB. Time for an update?",
+      "storeCreationFailed": "Uh-oh! We had trouble setting up our storage. Could you try again?",
+      "databaseNotInitialized": "Oops! Our database isn't ready yet. Hang tight!",
+      "itemAdditionFailed": "Yikes! We couldn't save that item. Could you try again?",
+      "itemRetrievalFailed": "Hmm, we couldn't find that item. Are you sure it's there?"
+    },
+    "expense": {
+      "validationFailed": "Oops! Your expense tripped on a validation rule.",
+      "notSaved": "Uh-oh! Your expense decided to play hide and seek and couldn't be saved."
+    }
   }
 }

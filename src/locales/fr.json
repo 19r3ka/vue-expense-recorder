@@ -28,8 +28,13 @@
       "isLength": "La saisie doit être exactement de {length} caractères."
     }
   },
+  "expense": {
+    "successfullySaved": "Hourra! Votre dépense a trouvé sa nouvelle maison dans notre base de données."
+  },
   "geolocation": {
-    "searchPosition": "Rechercher par adresse"
+    "searchPosition": "Rechercher par adresse",
+    "noPermissionTitle": "Aïe! Nous sommes perdus sans vous.",
+    "noPermissionSubtitle": "Activez la géolocalisation, et montrez-nous où vous faites pleuvoir les billets."
   },
   "categories": {
     "clothing": "Vêtements",
@@ -42,5 +47,31 @@
     "personal": "Personnel",
     "transportation": "Transport",
     "utilities": "Utilitaires"
+  },
+  "errors": {
+    "geolocation": {
+      "notSupported": "Oh non! Votre appareil ne supporte pas la géolocalisation. Peut-être est-il temps de le changer?",
+      "permissionDenied": "Il semble que nous n'ayons pas la permission de voir votre localisation. Pouvez-vous l'activer?",
+      "positionUnavailable": "Hmm, nous ne parvenons pas à trouver votre localisation. Vous cachez-vous dans un repaire secret?",
+      "timeout": "Nous essayons toujours de vous trouver... mais cela prend plus de temps que prévu. Pouvez-vous vérifier votre connexion?",
+      "invalidCoords": "Les coordonnées fournies sont invalides. Cliquez sur l'icône ‘réticule’ ci-dessous pour les mettre à jour.",
+      "unknownError": "Quelque chose de mystérieux s'est produit et nous n'avons pas pu obtenir votre localisation. Essayez à nouveau?",
+      "defaultMessage": "Une erreur s'est produite lors de la tentative d'obtenir votre localisation."
+    },
+    "geocoding": {
+      "apiRequestFailed": "Aïe! Notre carte semble faire une pause. Pourriez-vous réessayer plus tard?",
+      "emptyQuery": "Oups! Il semble que vous avez oublié de nous dire où vous voulez aller."
+    },
+    "indexedDB": {
+      "browserNotSupported": "Oh la la! Votre navigateur ne supporte pas IndexedDB. Peut-être est-il temps de le changer?",
+      "storeCreationFailed": "Uh-oh! Nous avons eu du mal à configurer notre stockage. Pourriez-vous réessayer?",
+      "databaseNotInitialized": "Oups! Notre base de données n'est pas encore prête. Patience!",
+      "itemAdditionFailed": "Aïe! Nous n'avons pas pu sauvegarder cet élément. Pourriez-vous réessayer?",
+      "itemRetrievalFailed": "Hmm, nous n'avons pas pu trouver cet élément. Êtes-vous sûr qu'il est là?"
+    },
+    "expense": {
+      "validationFailed": "Oups! Votre dépense a trébuché sur une règle de validation.",
+      "notSaved": "Oh non! Votre dépense a décidé de jouer à cache-cache et n'a pas pu être enregistrée."
+    }
   }
 }

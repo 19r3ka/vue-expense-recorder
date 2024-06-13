@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { computed, ref, reactive } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import ExpenseListItem from '@/components/ExpensesListItem.vue'
 
-import { useExpensesStore } from '@/composables/useExpensesStore'
+import { useExpensesStore } from '@/stores/expenses'
 import { useDateTime, SortDirection } from '@/composables/useDateTimeFunctions'
-import type { Expense } from './ExpenseFormNew.vue'
+import { useLogger } from '@/composables/useLogger'
 
-const { readExpenses } = useExpensesStore()
+const { getExpenses, error } = useExpensesStore()
 const { formatDate, groupItemsByDate, sortItemsByTime } = useDateTime()
-const expenses: Expense[] = reactive(await readExpenses())
+const { error: logError } = useLogger()
+
+const expenses = getExpenses
 
 const sortDirection = ref(SortDirection.ASC)
 
@@ -21,6 +23,16 @@ const groupedExpenses = computed(() => {
     items: sortItemsByTime(items, sortDirection.value as SortDirection)
   }))
 })
+
+// Watch for changes in the error ref and log them
+watch(
+  () => error,
+  (newError) => {
+    if (newError) {
+      logError(newError.message, newError)
+    }
+  }
+)
 </script>
 
 <template>

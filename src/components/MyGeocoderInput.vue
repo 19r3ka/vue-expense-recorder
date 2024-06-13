@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { inject } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
-import { useGeolocation } from '@vueuse/core'
-import { useGeocoding, type NominatimResponseItem } from '@/composables/useGeocoding'
-import { type GeoPoint } from '@/components/MyGeolocationInput.vue'
 import { VAutocomplete } from 'vuetify/components'
+import { useGeocoding, type NominatimResponseItem } from '@/composables/useGeocoding'
+import { useGeolocation, GEOLOCATION_ERROR_TYPES } from '@/composables/useGeolocation'
+import { type GeoPoint } from '@/components/MyGeolocationInput.vue'
 import { formatGeopoint } from '@/utils/geopointUtils'
-import { inject } from 'vue'
+import { useLogger } from '@/composables/useLogger'
 
 export interface AutocompleteItem {
   title: string // The displayed text for the option
@@ -22,11 +23,15 @@ const emit = defineEmits<{
   addressFound: [position: GeoPoint]
 }>()
 
-const { t } = useI18n()
+const DEFAULT_LOCATE_ME_ICON = 'mdi-crosshairs'
+const DEBOUNCE_TIME = 1000
+
 const v$ = inject('v$') as any
 
+const { t } = useI18n()
 const { isLoading, searchNominatim, searchResults } = useGeocoding()
-const { isSupported, coords, error } = useGeolocation()
+const { coords, error } = useGeolocation()
+const logger = useLogger()
 
 const selectedAddress = ref('')
 const searchInput = ref<InstanceType<typeof VAutocomplete> | null>(null) // template ref for the address search bar
@@ -39,11 +44,19 @@ const potentialAddresses = computed(() =>
   }))
 )
 
+// only display the "locate me" button when geolocation is supported and enabled
 const locateMeIcon = computed(() =>
-  coords.value.latitude !== Infinity && coords.value.longitude !== Infinity ? 'mdi-crosshairs' : ''
+  [GEOLOCATION_ERROR_TYPES.NOT_SUPPORTED, GEOLOCATION_ERROR_TYPES.PERMISSION_DENIED].includes(
+    error.value?.type as GEOLOCATION_ERROR_TYPES
+  )
+    ? ''
+    : DEFAULT_LOCATE_ME_ICON
 )
 
-const debouncedQuerySearch = useDebounceFn(fetchPotentialAddresses, 1000)
+// permission should be denied when there is no accuracy
+// const locateMeIcon = computed(() => (coords.value?.accuracy === 0 ? '' : DEFAULT_LOCATE_ME_ICON))
+
+const debouncedQuerySearch = useDebounceFn(fetchPotentialAddresses, DEBOUNCE_TIME)
 
 /**
  * Fetches potential address matches based on a user query string.
@@ -53,10 +66,15 @@ const debouncedQuerySearch = useDebounceFn(fetchPotentialAddresses, 1000)
  * @param {string} query - The user's search query string.
  * @returns {Promise<void>} - Resolves after fetching and processing the data, or rejects on error.
  */
-async function fetchPotentialAddresses(query: string): Promise<void> {
-  if (!query) return
+async function fetchPotentialAddresses(query: string) {
+  if (!query) return null
   const searchOptions = { q: query }
-  await searchNominatim(searchOptions)
+
+  try {
+    await searchNominatim(searchOptions)
+  } catch (error: any) {
+    logger.error(error.value.message, error.value)
+  }
 }
 
 /**
@@ -66,29 +84,24 @@ async function fetchPotentialAddresses(query: string): Promise<void> {
  *
  * Debounced search ensures that the API request for potential addresses is not triggered with every keystroke, but rather after a defined delay from the last user input. This helps optimize performance and avoid overwhelming the server with unnecessary requests.
  */
-function handleDebouncedSearch(): void {
-  if (!searchInput.value?.focused) return
+function handleDebouncedSearch() {
+  if (!searchInput.value?.focused) return null
   debouncedQuerySearch(userEnteredAddress.value)
 }
 
 /**
  * Updates the component's internal state with a new position based on a provided location string.
  */
-function updatePosition(locationString: string): void {
-  if (!locationString) return
+function updatePosition(locationString: string) {
+  if (!locationString) return null
   const geopoint = formatGeopoint(locationString, 'object') as GeoPoint
   emit('addressFound', geopoint)
 }
 
 function getDevicePosition() {
-  if (!isSupported.value) {
-    console.error('Geolocation is not supported by your browser')
-    return
-  }
-
   if (error.value) {
-    console.error('Failed to get current location:', error.value)
-    return
+    logger.error(error.value.message, error)
+    return null
   }
 
   const { latitude, longitude } = coords.value

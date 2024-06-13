@@ -1,5 +1,18 @@
 import { ref, reactive } from 'vue'
 import { EARTH_CIRCUMFERENCE, NOMINATIM_API_URL } from '@/config/geocoding'
+import { useLogger } from '@/composables/useLogger'
+import { GeocodingError } from '@/errors/GeocodingError'
+
+// Error message constants for i18n integration
+export enum GEOCODING_ERROR_TYPES {
+  API_REQUEST_FAILED = 'apiRequestFailed',
+  EMPTY_QUERY = 'emptyQuery'
+}
+
+export const GEOCODING_ERROR_MESSAGES = {
+  [GEOCODING_ERROR_TYPES.API_REQUEST_FAILED]: 'errors.geocoding.apiRequestFailed',
+  [GEOCODING_ERROR_TYPES.EMPTY_QUERY]: 'errors.geocoding.emptyQuery'
+}
 
 export interface NominatimSearchOptions {
   q: string // Free-form text query for location
@@ -82,8 +95,10 @@ export type NominatimSearchResult = NominatimResponseItem[]
  */
 export function useGeocoding() {
   const isLoading = ref(false)
-  const error = ref<Error | null>(null)
+  const error = ref<GeocodingError | null>(null)
   const searchResults = reactive<NominatimSearchResult>([])
+
+  const { error: logError } = useLogger()
 
   async function searchNominatim(options: NominatimSearchOptions) {
     isLoading.value = true
@@ -92,10 +107,15 @@ export function useGeocoding() {
 
     options.format ||= 'jsonv2' // Set format to "jsonv2" if it doesn't exist
     options.limit ||= 5 // Set limit to 5 if it doesn't exist
+    const endpoint = 'search'
+
+    if (!options.q)
+      throw new GeocodingError(
+        GEOCODING_ERROR_TYPES.EMPTY_QUERY,
+        GEOCODING_ERROR_MESSAGES[GEOCODING_ERROR_TYPES.EMPTY_QUERY]
+      )
 
     try {
-      const endpoint = options.q ? 'search' : 'reverse' // Use appropriate endpoint
-
       //   URLSearchParams expects Record<string, string>
       const stringifiedOptions = Object.fromEntries(
         Object.entries(options)
@@ -107,7 +127,10 @@ export function useGeocoding() {
 
       const response = await fetch(`${NOMINATIM_API_URL}${endpoint}?${params.toString()}`)
       if (!response.ok) {
-        throw new Error(`Nominatim API request failed with status: ${response.status}`)
+        throw new GeocodingError(
+          GEOCODING_ERROR_TYPES.API_REQUEST_FAILED,
+          `Nominatim API request failed with status: ${response.status}`
+        )
       }
 
       const data = await response.json()
@@ -115,7 +138,8 @@ export function useGeocoding() {
         searchResults.push(value)
       })
     } catch (err) {
-      error.value = err as Error
+      error.value = err as GeocodingError
+      logError(GEOCODING_ERROR_MESSAGES[GEOCODING_ERROR_TYPES.API_REQUEST_FAILED], err) // Log the error with details using the logger
     } finally {
       isLoading.value = false
     }

@@ -29,8 +29,13 @@ function useExpenseValidation(initialExpense: Expense) {
   }))
 
   const v$ = useVuelidate(rules, expense)
+  const validate = async () => await v$.value.$validate()
+  const error = v$.value.$silentErrors.map((error) => ({
+    property: error.$property,
+    message: error.$message
+  }))
 
-  return { expense, v$ }
+  return { expense, v$, validate, error }
 }
 
 export { useExpenseValidation }
